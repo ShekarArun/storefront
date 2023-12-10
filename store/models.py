@@ -8,6 +8,9 @@ class Promotion(models.Model):
 
 class Collection(models.Model):
     title = models.CharField(max_length=255)
+    # related_name '+' indicates to Django to ignore creating the reverse relationship field
+    featured_product = models.ForeignKey(
+        'Product', on_delete=models.SET_NULL, null=True, related_name='+')
 
 
 class Product(models.Model):
@@ -18,7 +21,7 @@ class Product(models.Model):
     last_update = models.DateTimeField(auto_now=True)
     collection = models.ForeignKey(Collection, on_delete=models.PROTECT)
 
-    promotions = models.ManyToManyRel(Promotion)
+    promotions = models.ManyToManyField(Promotion)
 
 
 class Customer(models.Model):
