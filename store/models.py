@@ -46,7 +46,7 @@ class Customer(models.Model):
 
     class Meta:
         # Example on how to override default table name
-        db_table = 'store_customers'
+        # db_table = 'store_customers'
         indexes = [
             models.Index(fields=['last_name', 'first_name'])
         ]
