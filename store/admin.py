@@ -1,4 +1,8 @@
+from typing import Any
 from django.contrib import admin
+from django.db.models.query import QuerySet
+from django.http.request import HttpRequest
+from django.db.models import Count
 
 from . import models
 
@@ -31,7 +35,23 @@ class CustomerAdmin(admin.ModelAdmin):
 
 @admin.register(models.Collection)
 class CollectionAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['title', 'products_count']
+
+    @admin.display(ordering='products_count')
+    def products_count(self, collection):
+        return collection.products_count
+
+    def get_queryset(self, request: HttpRequest) -> QuerySet[Any]:
+        return super().get_queryset(request).annotate(products_count=Count('product'))
+
+
+@admin.register(models.Order)
+class OrderAdmin(admin.ModelAdmin):
+    list_display = ['id', 'placed_at', 'customer_name']
+    list_select_related = ['customer']
+
+    def customer_name(self, order):
+        return order.customer
 
 # admin.site.register(models.Collection)
 # admin.site.register(models.Product)
