@@ -18,5 +18,9 @@ class CustomerAdmin(admin.ModelAdmin):
     list_per_page = 10
 
 
-admin.site.register(models.Collection)
+@admin.register(models.Collection)
+class CollectionAdmin(admin.ModelAdmin):
+    pass
+
+# admin.site.register(models.Collection)
 # admin.site.register(models.Product)
