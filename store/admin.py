@@ -26,12 +26,14 @@ class InventoryFilter(admin.SimpleListFilter):
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin):
     actions = ['clear_inventory']
+    autocomplete_fields = ['collection']
     list_display = ['title', 'unit_price',
                     'inventory_status', 'collection_title']
     list_editable = ['unit_price']
     list_filter = ['collection', 'last_update', InventoryFilter]
     list_per_page = 10
     list_select_related = ['collection']
+    prepopulated_fields = {'slug': ['title']}
 
     def collection_title(self, product):
         return product.collection.title
@@ -64,6 +66,7 @@ class CustomerAdmin(admin.ModelAdmin):
 @admin.register(models.Collection)
 class CollectionAdmin(admin.ModelAdmin):
     list_display = ['title', 'products_count']
+    search_fields = ['title']
 
     @admin.display(ordering='products_count')
     def products_count(self, collection):
