@@ -11,7 +11,7 @@ from .serializers import ProductSerializer, CollectionSerializer
 
 
 class ProductList(ListCreateAPIView):
-    queryset = Product.objects.select_related('collection').all()
+    queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
     # Below functions have been removed as directly specifying values for attributes of the class is neater
