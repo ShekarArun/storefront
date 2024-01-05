@@ -7,8 +7,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from rest_framework import status
-from .models import Product, Collection, OrderItem
-from .serializers import ProductSerializer, CollectionSerializer
+from .models import Product, Collection, OrderItem, Review
+from .serializers import ProductSerializer, CollectionSerializer, ReviewSerializer
 
 
 class ProductViewSet(ModelViewSet):
@@ -46,6 +46,11 @@ class CollectionViewSet(ModelViewSet):
                 {'error': 'Collection cannot be deleted as it has one or more products associated with it.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED
             )
         return super().destroy(request, *args, **kwargs)
+
+
+class ReviewViewSet(ModelViewSet):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
 
     # def delete(self, request, pk):
     #     collection = get_object_or_404(
