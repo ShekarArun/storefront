@@ -6,7 +6,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 # from rest_framework.decorators import api_view
 from rest_framework.filters import SearchFilter, OrderingFilter
 # from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
-from rest_framework.mixins import CreateModelMixin
+from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin
 # from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 # from rest_framework.views import APIView
@@ -90,8 +90,8 @@ class ReviewViewSet(ModelViewSet):
     #     return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class CartViewSet(CreateModelMixin, GenericViewSet):
-    queryset = Cart.objects.all()
+class CartViewSet(CreateModelMixin, RetrieveModelMixin, GenericViewSet):
+    queryset = Cart.objects.prefetch_related('items__product').all()
     serializer_class = CartSerializer
 # Removed since all features are a part of the Product viewset
 # class ProductList(ListCreateAPIView):
