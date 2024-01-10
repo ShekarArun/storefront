@@ -14,6 +14,8 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework import status
 
+from store.permissions import IsAdminOrReadOnly
+
 from .filters import ProductFilter
 from .models import CartItem, Customer, Product, Collection, OrderItem, Review, Cart
 from .serializers import AddCartItemSerializer, CartItemSerializer, CartSerializer, CustomerSerializer, ProductSerializer, CollectionSerializer, ReviewSerializer, UpdateCartItemSerializer
@@ -26,6 +28,7 @@ class ProductViewSet(ModelViewSet):
     # filterset_fields = ['collection_id']
     filterset_class = ProductFilter
     # pagination_class = PageNumberPaginat ion
+    permission_classes = [IsAdminOrReadOnly]
     search_fields = ['title', 'description']
     ordering_fields = ['unit_price', 'last_update']
 
@@ -59,6 +62,7 @@ class ProductViewSet(ModelViewSet):
 class CollectionViewSet(ModelViewSet):
     queryset = Collection.objects.annotate(
         products_count=Count('products')).all()
+    permission_classes = [IsAdminOrReadOnly]
     serializer_class = CollectionSerializer
 
     def destroy(self, request, *args, **kwargs):
