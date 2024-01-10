@@ -117,13 +117,20 @@ class CustomerViewSet(CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, Ge
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
 
-    @action(detail=False)
+    @action(detail=False, methods=['GET', 'PUT'])
     def me(self, request):
         # Such a method is called an 'action', and this is a custom action in specific
         # If not logged in, set to an instance of AnonymousUser class
-        customer = Customer.objects.get(user_id=request.user.id)
-        serializer = CustomerSerializer(customer)
+        (customer, created) = Customer.objects.get_or_create(
+            user_id=request.user.id)
+        if request.method == 'GET':
+            serializer = CustomerSerializer(customer)
+        elif request.method == 'PUT':
+            serializer = CustomerSerializer(customer, data=request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
         return Response(serializer.data)
+
 
 # Removed since all features are a part of the Product viewset
 # class ProductList(ListCreateAPIView):
