@@ -3,7 +3,7 @@ from django.db.models import Count
 # from django.http import HttpResponse
 from django_filters.rest_framework import DjangoFilterBackend
 
-# from rest_framework.decorators import api_view
+from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter, OrderingFilter
 # from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, DestroyModelMixin, UpdateModelMixin
@@ -116,6 +116,14 @@ class CartItemViewSet(ModelViewSet):
 class CustomerViewSet(CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, GenericViewSet):
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
+
+    @action(detail=False)
+    def me(self, request):
+        # Such a method is called an 'action', and this is a custom action in specific
+        # If not logged in, set to an instance of AnonymousUser class
+        customer = Customer.objects.get(user_id=request.user.id)
+        serializer = CustomerSerializer(customer)
+        return Response(serializer.data)
 
 # Removed since all features are a part of the Product viewset
 # class ProductList(ListCreateAPIView):
