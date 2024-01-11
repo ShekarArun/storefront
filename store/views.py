@@ -16,8 +16,8 @@ from rest_framework import status
 
 from .permissions import FullDjangoModelPermissions, IsAdminOrReadOnly, ViewCustomerHistoryPermission
 from .filters import ProductFilter
-from .models import CartItem, Customer, Product, Collection, OrderItem, Review, Cart
-from .serializers import AddCartItemSerializer, CartItemSerializer, CartSerializer, CustomerSerializer, ProductSerializer, CollectionSerializer, ReviewSerializer, UpdateCartItemSerializer
+from .models import CartItem, Customer, Order, Product, Collection, OrderItem, Review, Cart
+from .serializers import AddCartItemSerializer, CartItemSerializer, CartSerializer, CustomerSerializer, OrderSerializer, ProductSerializer, CollectionSerializer, ReviewSerializer, UpdateCartItemSerializer
 
 
 class ProductViewSet(ModelViewSet):
@@ -144,6 +144,11 @@ class CustomerViewSet(ModelViewSet):
     @action(detail=True, permission_classes=[ViewCustomerHistoryPermission])
     def history(self, request, pk):
         return Response('History fetched')
+
+
+class OrderViewSet(ModelViewSet):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
 
 
 # Removed since all features are a part of the Product viewset
