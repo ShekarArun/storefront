@@ -3,6 +3,7 @@ from django.db import transaction
 from rest_framework import serializers
 
 from .models import CartItem, Customer, Order, OrderItem, Product, Collection, Review, Cart
+from .signals import order_created
 
 
 class CollectionSerializer(serializers.ModelSerializer):
@@ -186,5 +187,9 @@ class CreateOrderSerializer(serializers.Serializer):
             OrderItem.objects.bulk_create(order_items)
             # Finally, remove these items from cart
             Cart.objects.filter(pk=cart_id).delete()
+
+            # Send a signal to the app so that an event can be triggered after order creation
+            # Send the 'sender class' and order information as kwargs to the signal handler
+            order_created.send_robust(sender=self.__class__, order=order)
 
             return order
