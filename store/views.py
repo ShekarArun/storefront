@@ -131,8 +131,7 @@ class CustomerViewSet(ModelViewSet):
     def me(self, request):
         # Such a method is called an 'action', and this is a custom action in specific
         # If not logged in, set to an instance of AnonymousUser class
-        (customer, created) = Customer.objects.get_or_create(
-            user_id=request.user.id)
+        customer = Customer.objects.get(user_id=request.user.id)
         if request.method == 'GET':
             serializer = CustomerSerializer(customer)
         elif request.method == 'PUT':
@@ -183,8 +182,8 @@ class OrderViewSet(ModelViewSet):
         if user.is_staff:
             return Order.objects.all()
 
-        (customer_id, created) = Customer.objects.only(
-            'id').get_or_create(user_id=user.id)
+        customer_id = Customer.objects.only(
+            'id').get(user_id=user.id)
         return Order.objects.filter(customer_id=customer_id)
 
 
