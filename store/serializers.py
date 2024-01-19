@@ -153,7 +153,7 @@ class CreateOrderSerializer(serializers.Serializer):
     cart_id = serializers.UUIDField()
 
     def validate_cart_id(self, cart_id):
-        if Cart.objects.filter(pk=cart_id).exists():
+        if not Cart.objects.filter(pk=cart_id).exists():
             raise serializers.ValidationError(
                 'Cart with given ID was not found')
         if CartItem.objects.filter(cart_id=cart_id).count() == 0:
