@@ -16,8 +16,8 @@ from rest_framework import status
 
 from .permissions import FullDjangoModelPermissions, IsAdminOrReadOnly, ViewCustomerHistoryPermission
 from .filters import ProductFilter
-from .models import CartItem, Customer, Order, Product, Collection, OrderItem, Review, Cart
-from .serializers import AddCartItemSerializer, CartItemSerializer, CartSerializer, CreateOrderSerializer, CustomerSerializer, OrderSerializer, ProductSerializer, CollectionSerializer, ReviewSerializer, UpdateCartItemSerializer, UpdateOrderSerializer
+from .models import CartItem, Customer, Order, Product, Collection, OrderItem, ProductImage, Review, Cart
+from .serializers import AddCartItemSerializer, CartItemSerializer, CartSerializer, CreateOrderSerializer, CustomerSerializer, OrderSerializer, ProductImageSerializer, ProductSerializer, CollectionSerializer, ReviewSerializer, UpdateCartItemSerializer, UpdateOrderSerializer
 
 
 class ProductViewSet(ModelViewSet):
@@ -187,6 +187,17 @@ class OrderViewSet(ModelViewSet):
         return Order.objects.filter(customer_id=customer_id)
 
 
+class ProductImageViewSet(ModelViewSet):
+    serializer_class = ProductImageSerializer
+
+    def get_serializer_context(self):
+        return {'product_id': self.kwargs['product_pk']}
+
+    def get_queryset(self):
+        return ProductImage.objects.filter(product_id=self.kwargs['product_pk'])
+
+
+########################################################################################################################
 # Removed since all features are a part of the Product viewset
 # class ProductList(ListCreateAPIView):
 
